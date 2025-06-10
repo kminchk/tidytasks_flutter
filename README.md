@@ -1,16 +1,16 @@
 # tidytasks_v1
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+lib/
+├── main.dart
+├── constants/
+│   └── supabase_keys.dart       // สำหรับเก็บ URL และ anon key
+├── screens/
+│   ├── welcome_screen.dart      // หน้าแรก
+│   ├── login_screen.dart        // Login แบบ email/password
+│   ├── register_screen.dart     // Register แบบ email/password
+│   ├── home_screen.dart         // หน้า to-do list
+│   ├── profile_screen.dart      // หน้าโปรไฟล์
+├── widgets/
+│   └── task_tile.dart           // รายการ to-do list
+└── services/
+    └── auth_service.dart        // จัดการ auth เช่น login/logout/google

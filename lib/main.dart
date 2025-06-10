@@ -1,96 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'screens/login.dart';
+import 'screens/todo_list.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: 'https://anlepviopbexlvvjktji.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFubGVwdmlvcGJleGx2dmprdGppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNTMxMjgsImV4cCI6MjA2NDYyOTEyOH0.fYSNuls6bFtNua3nw7AU-esWC_QxcQSCVsDV_C26O1s',
+  );
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // 👈 เอาแถบ DEBUG ออก
       title: 'TidyTasks',
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: const SessionCheckScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+// ✅ แก้ให้เป็น StatefulWidget เพื่อเช็ค session ได้
+class SessionCheckScreen extends StatefulWidget {
+  const SessionCheckScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<SessionCheckScreen> createState() => _SessionCheckScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _SessionCheckScreenState extends State<SessionCheckScreen> {
+  final supabase = Supabase.instance.client;
+  bool _isChecking = true;
+  bool _isLoggedIn = false;
+  String _username = '';
+  String _userId = '';
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    checkSession();
+  }
+
+  Future<void> checkSession() async {
+    final user = supabase.auth.currentUser;
+
+    if (user != null) {
+      _username = user.userMetadata?['name'] ?? 'Google User';
+      _userId = user.id;
+      setState(() {
+        _isLoggedIn = true;
+        _isChecking = false;
+      });
+    } else {
+      setState(() {
+        _isLoggedIn = false;
+        _isChecking = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('TEST You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    if (_isChecking) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_isLoggedIn) {
+      return ToDoListScreen(userId: _userId, username: _username);
+    } else {
+      return const LoginScreen();
+    }
   }
 }
