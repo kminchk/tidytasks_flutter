@@ -18,12 +18,11 @@ It allows users to easily manage daily tasks, mark completed items, and keep thi
 
 ## 🖼️ App Demos
 
-<p align="center">
-  <img src="screenshots/login_demo.png" width="30%" alt="Login Screen" style="margin-right: 10px;" />
-  <img src="screenshots/tasks_demo.png" width="30%" alt="To-Do List" style="margin-right: 10px;" />
+<p float="left">
+  <img src="screenshots/login_demo.png" width="30%" alt="Login Screen" />
+  <img src="screenshots/tasks_demo.png" width="30%" alt="To-Do List" />
   <img src="screenshots/register_demo.png" width="30%" alt="Register Page" />
 </p>
-
 
 ---
 
