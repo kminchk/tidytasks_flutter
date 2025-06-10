@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/gestures.dart';
 import 'register.dart';
 import 'todo_list.dart';
 
@@ -116,6 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           SizedBox(height: 32),
+
           TextField(
             controller: emailController,
             style: TextStyle(color: Colors.white),
@@ -128,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
+
           SizedBox(height: 16),
           TextField(
             controller: passwordController,
@@ -224,6 +228,36 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Text(
               'Forgot Password?',
               style: TextStyle(color: Colors.orangeAccent),
+            ),
+          ),
+          SizedBox(height: 200), // ระยะห่างก่อน footer
+          RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: 'Created by ',
+              style: TextStyle(color: Colors.white70),
+              children: [
+                TextSpan(
+                  text: 'MinDev',
+                  style: TextStyle(
+                    color: Colors.lightBlueAccent,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async {
+                      final Uri url = Uri.parse('https://github.com/kminchk');
+
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        ); // เปิดนอกแอพ
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                ),
+              ],
             ),
           ),
         ],
