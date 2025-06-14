@@ -40,5 +40,5 @@ It allows users to easily manage daily tasks, mark completed items, and keep thi
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/your-username/tidytasks_flutter.git
+   git clone https://github.com/kminchk/tidytasks_flutter.git
    cd tidytasks_flutter
